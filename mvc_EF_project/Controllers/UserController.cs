@@ -113,7 +113,7 @@ namespace mvc_EF_project.Controllers
             //              where p.provinceId == 4
             //              select new { p.provinceName,c.CityName }).Distinct();
 
-            //left join
+            //left join 返回指定类型的数据集
             var data = (from p in db.Provinces
                         join c in db.Cities on p.provinceId equals c.provinceId into c_join
                         from c in c_join.DefaultIfEmpty()
