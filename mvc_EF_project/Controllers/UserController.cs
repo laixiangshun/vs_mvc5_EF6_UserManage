@@ -134,6 +134,7 @@ namespace mvc_EF_project.Controllers
             var result = (from p in db.Provinces
                           join c in db.Cities on p.provinceId equals c.provinceId
                           select new ProvinceByCity { provinceName = p.provinceName, CityName = c.CityName }).Distinct();
+
             List<ProvinceByCity> dataList = result.ToList();
             return PartialView("JoinQuery", dataList);
         }
