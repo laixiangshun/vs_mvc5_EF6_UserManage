@@ -1,0 +1,56 @@
+﻿
+@using PagedList.Mvc;
+@model PagedList.IPagedList<mvc_EF_project.Models.Worker>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*@model IEnumerable<mvc_EF_project.Models.Worker>*@
+
+<link href="~/Content/PagedList.css" rel="stylesheet"/>
+<script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
+<p style="font-size:18px;">
+    @Html.ActionLink("Add","Create")
+</p>
+
+@using (Html.BeginForm("Index","Company",FormMethod.Get)) { 
+    <p>
+        Find by name:@Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @Style = "display:inline" })
+        <input type="submit" id="submit" value="查询" class="btn btn-default btn-info"/>
+        <input type="button" value="清空" id="clear" class="btn btn-default btn-info"/>
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>@Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FirstNameSortParm })</th>
+        <th>@Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.LastNameSortParm })</th>
+        <th>Sex</th>
+        <th>Rating</th>
+        <th>操作</th>
+    </tr>
+    @foreach (var item in Model) { 
+        <tr>
+            <td>@Html.DisplayFor(model=>item.FirstName)</td>
+            <td>@Html.DisplayFor(model=>item.LastName)</td>
+            <td>@Html.DisplayFor(model=>item.Sex)</td>
+            <td>@Html.DisplayFor(model=>item.Rating)</td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id=item.ID}) |
+                @Html.ActionLink("Edit", "Edit", new { id=item.ID}) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.ID})
+            </td>
+        </tr>
+    }
+</table>
+@* 显示分页按钮 *@
+<div style="text-align:right;">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.currentSort, currentFilter = ViewBag.CurrentFilter })) 
+</div>
+<script type="text/javascript">
+    $("#clear").click(function () {
+        window.location.href = "/Company/Index";
+    })
+</script>
+
+
+

@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+@model mvc_EF_project.Models.User
+<h2>Create</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken();
+    <div class="form-horizontal">
+        <h4>创建用户</h4>
+        <div class="form-group">
+            @Html.LabelFor(m => m.userName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.userName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.userName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.address, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.address, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Province, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.Province,new SelectList(ViewBag.ProvinceList, "provinceId", "provinceName"),
+                  "选择所在省", new { @class = "form-control", @onchange = "FillCity()" })
+                @Html.ValidationMessageFor(m => m.Province, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.City, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.City, new SelectList(Enumerable.Empty<SelectListItem>(), "CityId", "CityName"),
+                  "选择所在市",new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ZipCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ZipCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.phone, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.phone, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" />
+                <a href="/DropDownList/Index" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+    </div>
+}
+<div id="json"></div>
+<a href="javascript:void(0);" onclick="GetJson(this);">获取json数据测试</a>
+
+@* 调用分布视图 *@
+<hr />
+<p style="color:blue;font-size:18px;">left join的结果</p>
+@Html.Action("Query") 
+<hr />
+<p style="color:aqua;font-size:18px;">inner join的结果</p>
+@{
+    Html.RenderAction("JoinQuery");
+}
+
+<script type="text/javascript">
+    function FillCity() {
+        var Province = $("#Province").val();
+        $.ajax({
+            url: '/User/FillCity',
+            type: "get",
+            cache: false,
+            dataType: "json",
+            data: { provinceId: Province },
+            success: function (data) {
+                $("#City").html("");
+                $.each(data, function (i, item) {
+                    $("#City").append(
+                        $("<option></option>").val(item.CityId).html(item.CityName));
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(textStatus + ":" + errorThrown);
+            }
+        })
+    }
+
+    function GetJson(target) {
+        $.ajax({
+            url: '/User/GetJsonData2?ran='+Math.random(),
+            type: "post",
+            dataType: 'json',
+            success: function (data) {
+                //data = JSON.parse(data);
+               // data = eval("(" + data + ")");
+                for (var i = 0; i < data.length; i++) {
+                    $("#json").append("<font color='blue'>" + data[i].CityName + "</font>" + data[i].CityName + "(" + data[i].provinceId + ")" + "<br><hr/>");
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(textStatus);
+            }
+        })
+    }
+</script>

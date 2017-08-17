@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<p>绑定下拉列表第一种方式</p>
+@Html.DropDownList("hard-code-dropdownList", new SelectList(ViewBag.hard_value, "Value", "Text"), new { @class="btn btn-success dropdown-toggle from-control"})
+<hr />
+<p>第二种绑定下拉列表的方式</p>
+@Html.DropDownList("dropdown2", ViewBag.data as IEnumerable<SelectListItem>, new { @class="btn btn-success dropdown-toggle from-control"})
+<hr />
+<p>第三种绑定枚举</p>
+@Html.DropDownList("dropdown3", new SelectList(ViewBag.from_enum), new { @class="btn btn-success dropdown-toggle from-control"})
+<hr />
+<p>绑定枚举-EnumDropDownListFor</p>
+@model mvc_EF_project.Models.Worker
+
+<div class="form-group">
+    @Html.LabelFor(model => model.Sex, new { @class="control-lable col-md-2"})
+    <div class="col-md-10">
+        @Html.EnumDropDownListFor(model => model.Sex, new { @class="form-control"})
+        @Html.ValidationMessageFor(model => model.Sex, "", new { @class="form-control"})
+    </div>
+</div>

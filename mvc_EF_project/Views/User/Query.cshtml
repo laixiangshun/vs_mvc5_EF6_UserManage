@@ -1,0 +1,8 @@
+﻿@model IEnumerable<mvc_EF_project.ViewModels.ProvinceByCity>
+
+@foreach (var item in Model)
+{
+    <hr />
+    <span>@Html.DisplayFor(model=>item.provinceName)</span>
+    <span>@Html.DisplayFor(model=>item.CityName)</span>
+}

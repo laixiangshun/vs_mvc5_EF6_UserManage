@@ -1,0 +1,42 @@
+﻿@{
+    Layout =null;
+}
+<script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
+<h2>before PartialView</h2>
+<hr />
+@* 这是直接调用分布视图 *@
+@Html.Partial("_PartialView",1)
+@{
+    Html.RenderPartial("_PartialView", 2);
+}
+<hr />
+@* 这是使用ChildAction调用分布视图， 调用ChildAction同样有两种方法，Html.Action和Html.RenderAction；*@
+@Html.Action("ChildAction", new {time=DateTime.Now})
+<hr />
+@{
+    Html.RenderAction("ChildAction", new { time=DateTime.Now});
+}
+<hr />
+@* ajax无刷新更新分布视图 *@
+
+<div id="partial"></div>
+<hr />
+<h2>after partialView</h2>
+<script type="text/javascript">
+    function LoadAction() {
+        var time = new Date();
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("ChildAction2","PartialView")',
+            data: { time: time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() },
+            datatype: "text/html",
+            success: function (data) {
+                $("#partial").html(data);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    setInterval(LoadAction, 1000);
+</script>
